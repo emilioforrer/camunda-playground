@@ -1,0 +1,24 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  CAMUNDA_DIR: camunda/
+  GO_SERVICE_DIR: go-service/
+
+includes:
+  go-service:
+    taskfile: "./{{.GO_SERVICE_DIR}}/Taskfile.yml"
+    dir: "./{{.GO_SERVICE_DIR}}"
+
+tasks:
+  camunda-up:
+    dir: "{{.CAMUNDA_DIR}}"
+    cmds:
+      - docker-compose up
+
+  camunda-down:
+    dir: "{{.CAMUNDA_DIR}}"
+    cmds:
+      - docker-compose down -v --remove-orphans
+    

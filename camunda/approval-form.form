@@ -1,0 +1,56 @@
+{
+  "components": [
+    {
+      "text": "# Approval Form\n\n**Order:** {{orderId}}\n\n**Total** {{orderTotal}}\n",
+      "label": "Text view",
+      "type": "text",
+      "layout": {
+        "row": "Row_1apwzz1",
+        "columns": null
+      },
+      "id": "Field_1jnmn4e"
+    },
+    {
+      "values": [
+        {
+          "label": "Cash",
+          "value": "cash"
+        },
+        {
+          "label": "Credit Card",
+          "value": "creditcard"
+        }
+      ],
+      "label": "Payment Method",
+      "type": "select",
+      "layout": {
+        "row": "Row_1dxdj5a",
+        "columns": null
+      },
+      "id": "Field_11bqh77",
+      "key": "paymentMethod",
+      "validate": {
+        "required": true
+      }
+    },
+    {
+      "label": "Confirm payment method",
+      "type": "checkbox",
+      "layout": {
+        "row": "Row_02u9m0n",
+        "columns": null
+      },
+      "id": "Field_16svggn",
+      "key": "paymentMethodConfirmation"
+    }
+  ],
+  "type": "default",
+  "id": "ApprovalForm",
+  "executionPlatform": "Camunda Cloud",
+  "executionPlatformVersion": "8.5.0",
+  "exporter": {
+    "name": "Camunda Modeler",
+    "version": "5.26.0"
+  },
+  "schemaVersion": 16
+}

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1qo4mfy" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.26.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0">
+  <bpmn:process id="ExampleProcess" name="Example Process" isExecutable="true">
+    <bpmn:extensionElements>
+      <zeebe:properties>
+        <zeebe:property />
+      </zeebe:properties>
+    </bpmn:extensionElements>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_169uso4</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:serviceTask id="goServiceTaskElement" name="Payment Service">
+      <bpmn:extensionElements>
+        <zeebe:taskDefinition type="go-service" retries="3" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0aa3owv</bpmn:incoming>
+      <bpmn:outgoing>Flow_14v4339</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="Event_0b1kudd">
+      <bpmn:incoming>Flow_0fcqab0</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_169uso4" sourceRef="StartEvent_1" targetRef="SelectPaymentMethod" />
+    <bpmn:userTask id="SelectPaymentMethod" name="Select Payment Method">
+      <bpmn:extensionElements>
+        <zeebe:formDefinition formKey="ApprovalForm" />
+        <zeebe:ioMapping>
+          <zeebe:input source="=random number() * 100000" target="orderId" />
+          <zeebe:input source="=47.99" target="orderTotal" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_169uso4</bpmn:incoming>
+      <bpmn:outgoing>Flow_0cg1d14</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="ApprovedExecutionGatewaySplit" name="Payment method confirmed?">
+      <bpmn:extensionElements>
+        <zeebe:properties>
+          <zeebe:property />
+        </zeebe:properties>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0cg1d14</bpmn:incoming>
+      <bpmn:outgoing>Flow_0aa3owv</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1k65mwi</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0cg1d14" sourceRef="SelectPaymentMethod" targetRef="ApprovedExecutionGatewaySplit" />
+    <bpmn:sequenceFlow id="Flow_0aa3owv" name="Yes" sourceRef="ApprovedExecutionGatewaySplit" targetRef="goServiceTaskElement">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=paymentMethodConfirmation = true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:exclusiveGateway id="ApprovedExecutionGatewayJoin">
+      <bpmn:incoming>Flow_14v4339</bpmn:incoming>
+      <bpmn:incoming>Flow_1k65mwi</bpmn:incoming>
+      <bpmn:outgoing>Flow_0fcqab0</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_14v4339" sourceRef="goServiceTaskElement" targetRef="ApprovedExecutionGatewayJoin" />
+    <bpmn:sequenceFlow id="Flow_0fcqab0" sourceRef="ApprovedExecutionGatewayJoin" targetRef="Event_0b1kudd" />
+    <bpmn:sequenceFlow id="Flow_1k65mwi" name="No" sourceRef="ApprovedExecutionGatewaySplit" targetRef="ApprovedExecutionGatewayJoin">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=paymentMethodConfirmation != true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="ExampleProcess">
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="192" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1yejf09_di" bpmnElement="goServiceTaskElement">
+        <dc:Bounds x="800" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0b1kudd_di" bpmnElement="Event_0b1kudd">
+        <dc:Bounds x="1382" y="182" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0yj2j3p_di" bpmnElement="SelectPaymentMethod">
+        <dc:Bounds x="340" y="170" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_06mtxc4_di" bpmnElement="ApprovedExecutionGatewaySplit" isMarkerVisible="true">
+        <dc:Bounds x="565" y="185" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="630" y="200" width="84" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1hoev9v_di" bpmnElement="ApprovedExecutionGatewayJoin" isMarkerVisible="true">
+        <dc:Bounds x="1085" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_169uso4_di" bpmnElement="Flow_169uso4">
+        <di:waypoint x="215" y="210" />
+        <di:waypoint x="340" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0cg1d14_di" bpmnElement="Flow_0cg1d14">
+        <di:waypoint x="440" y="210" />
+        <di:waypoint x="565" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0aa3owv_di" bpmnElement="Flow_0aa3owv">
+        <di:waypoint x="590" y="185" />
+        <di:waypoint x="590" y="120" />
+        <di:waypoint x="800" y="120" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="596" y="148" width="18" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14v4339_di" bpmnElement="Flow_14v4339">
+        <di:waypoint x="900" y="120" />
+        <di:waypoint x="1110" y="120" />
+        <di:waypoint x="1110" y="175" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fcqab0_di" bpmnElement="Flow_0fcqab0">
+        <di:waypoint x="1135" y="200" />
+        <di:waypoint x="1382" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1k65mwi_di" bpmnElement="Flow_1k65mwi">
+        <di:waypoint x="590" y="235" />
+        <di:waypoint x="590" y="310" />
+        <di:waypoint x="1110" y="310" />
+        <di:waypoint x="1110" y="225" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="843" y="292" width="15" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
